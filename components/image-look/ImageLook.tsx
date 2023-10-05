@@ -1,39 +1,12 @@
-import type { ImageWidget } from "apps/admin/widgets.ts";
+import { Props } from "deco-sites/hugo-estudos/components/image-look/Types.ts";
 import ImageLookButton from "deco-sites/hugo-estudos/islands/ImageLookButton.tsx";
-import { Product } from "apps/commerce/types.ts";
-
-export interface Image {
-  src: ImageWidget;
-  alt: string;
-  buttons: Buttons[];
-}
-
-export interface Buttons {
-  // productId: string;
-  product: Product | null;
-  positionX: number;
-  positionY: number;
-}
-
-export interface Props {
-  /**
-   * @title Title
-   * @description Title of the block
-   */
-  title: string;
-  /**
-   * @title Image list
-   * @description List of images to show in the block
-   */
-  images: Image[];
-}
 
 function ImageLook({ images, title }: Props) {
   return (
-    <section>
+    <section className="flex justify-center items-center gap-2">
       {images.map((image) => (
         <div className="relative w-auto inline-block">
-          <img src={image.src} alt={image.alt} width={200} height={200} />
+          <img src={image.src} alt={image.alt} width={500} height={500} />
           {image.buttons.map((button, index) => {
             if (!button.product) return;
             return (
@@ -41,6 +14,7 @@ function ImageLook({ images, title }: Props) {
                 key={button.product.productID + index}
                 positionX={button.positionX}
                 positionY={button.positionY}
+                card={button.card}
                 product={button.product}
               />
             );
