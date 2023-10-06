@@ -30,7 +30,9 @@ const InfoCard = (
         <p className="font-bold overflow-hidden text-ellipsis max-w-full mb-1.5">
           {product.name}
         </p>
-        <p class="font-normal mb-1.5">{product.offers?.lowPrice}</p>
+        <p class="font-normal mb-1.5">
+          {"$" + product.offers?.lowPrice.toFixed(2)}
+        </p>
         <button className="cursor-pointer font-normal pointer-events-none p-1 bg-secondary rounded-md text-white">
           Ver mais
         </button>

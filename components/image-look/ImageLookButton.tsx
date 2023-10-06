@@ -28,10 +28,8 @@ const ImageLookButton = (
   };
 
   useEffect(() => {
-    // Adicione um ouvinte de evento de clique global
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Remova o ouvinte quando o componente for desmontado
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -41,7 +39,7 @@ const ImageLookButton = (
   return (
     <button
       class={`absolute bg-secondary border-2 border-white font-bold flex justify-center leading-5 items-center text-white z-10 translate-x-[-50%] translate-y-[-50%] w-5 h-5 rounded-full ${
-        openInfoCard ? "z-50" : "z-10"
+        openInfoCard ? "z-50 animate-none" : "z-10 animate-pulse"
       }`}
       ref={buttonRef}
       style={{
