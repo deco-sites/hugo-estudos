@@ -47,7 +47,7 @@ const manifest = {
     "deco-sites/hugo-estudos/sections/Images/BannerGrid.tsx": $$$$$$8,
     "deco-sites/hugo-estudos/sections/Images/Carousel.tsx": $$$$$$9,
     "deco-sites/hugo-estudos/sections/Images/ImageGallery.tsx": $$$$$$10,
-    "deco-sites/hugo-estudos/sections/Images/ImgLook.tsx": $$$$$$11,
+    "deco-sites/hugo-estudos/sections/Images/ImageLook.tsx": $$$$$$11,
     "deco-sites/hugo-estudos/sections/Images/ShoppableBanner.tsx": $$$$$$12,
     "deco-sites/hugo-estudos/sections/Links/LinkTree.tsx": $$$$$$13,
     "deco-sites/hugo-estudos/sections/Links/Shortcuts.tsx": $$$$$$14,
