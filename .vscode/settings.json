@@ -13,5 +13,6 @@
   },
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "editor.wordWrap": "bounded"
 }
