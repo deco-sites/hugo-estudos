@@ -15,7 +15,7 @@ function ImageLook({ images, title }: Props) {
               alt={image.alt}
               width={500}
               height={500}
-              loading="lazy"
+              loading="eager"
             />
             {image.buttons.map((button, index) => {
               if (!button.product) return;
