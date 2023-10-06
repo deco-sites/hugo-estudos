@@ -43,8 +43,8 @@ const ImageLookButton = (
       }`}
       ref={buttonRef}
       style={{
-        top: `${positionX}%`,
-        left: `${positionY}%`,
+        top: `${positionY}%`,
+        left: `${positionX}%`,
       }}
       onClick={() => setOpenInforCard((prev) => !prev)}
     >

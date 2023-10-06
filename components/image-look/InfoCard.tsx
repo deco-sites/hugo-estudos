@@ -2,7 +2,7 @@ import { Product } from "apps/commerce/types.ts";
 import { Card } from "deco-sites/hugo-estudos/components/image-look/Types.ts";
 import { useEffect, useState } from "preact/compat";
 
-interface Props {
+interface InfoCardProps {
   product: Product;
   card: Card;
 }
