@@ -14,7 +14,7 @@ import * as $$$$$$7 from "./sections/Header/Header.tsx";
 import * as $$$$$$8 from "./sections/Images/BannerGrid.tsx";
 import * as $$$$$$9 from "./sections/Images/Carousel.tsx";
 import * as $$$$$$10 from "./sections/Images/ImageGallery.tsx";
-import * as $$$$$$11 from "./sections/Images/ImgLook.tsx";
+import * as $$$$$$11 from "./sections/Images/ImageLook.tsx";
 import * as $$$$$$12 from "./sections/Images/ShoppableBanner.tsx";
 import * as $$$$$$13 from "./sections/Links/LinkTree.tsx";
 import * as $$$$$$14 from "./sections/Links/Shortcuts.tsx";
