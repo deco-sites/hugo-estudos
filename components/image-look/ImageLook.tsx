@@ -2,10 +2,8 @@ import { Props } from "deco-sites/hugo-estudos/components/image-look/Types.ts";
 import ImageLookButton from "deco-sites/hugo-estudos/islands/ImageLookButton.tsx";
 
 function ImageLook({ images, title }: Props) {
-  const positionX = 10;
-  const positionY = 10;
   return (
-    <section className="flex justify-center items-center flex-wrap my-5 gap-2">
+    <div className="flex justify-center items-center flex-wrap my-5 gap-2">
       {images.map((image) => (
         <>
           <h2 class="container w-full text-center font-bold text-xl my-4">

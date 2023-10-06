@@ -8,7 +8,7 @@ interface InfoCardProps {
 }
 
 const InfoCard = (
-  { product, card: { cardPositionX, cardPositionY } }: Props,
+  { product, card: { cardPositionX, cardPositionY } }: InfoCardProps,
 ) => {
   const [isVisible, setisVisible] = useState(false);
   useEffect(() => {
