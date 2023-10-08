@@ -36,7 +36,8 @@ function ImageLook({ images, title }: Props) {
                 height={500}
                 media="(min-width: 767px)"
               />
-              <img src={image.src} alt={image.alt ?? title} />
+              <img src={image.src} alt={image.alt ?? title} loading="eager" //TODO: loading: mudar para receber pelo admin a opção
+              />
             </Picture>
             {image.buttons.map((button, index) => {
               if (!button.product) return;
