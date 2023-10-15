@@ -1,8 +1,10 @@
+import PersonalShopperStream from "./PersonalShopperStream.tsx";
 
-const PersonalShopper = () => {
-  return (
-    <div>PersonalShopper</div>
-  )
+export interface Props {
 }
 
-export default PersonalShopper
+const PersonalShopper = () => {
+  return <PersonalShopperStream />;
+};
+
+export default PersonalShopper;

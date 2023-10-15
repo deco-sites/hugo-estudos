@@ -16,13 +16,13 @@ import { Server } from "https://deno.land/x/socket_io@0.1.1/mod.ts";
 
 const io = new Server({
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:8000",
     methods: ["GET", "POST"],
   },
 });
 
 io.on("connection", (socket) => {
-  console.log("AAAAAAA")
+  console.log("AAAAAAA");
   socket.emit("me", socket.id);
 
   socket.on("disconnect", () => {
@@ -41,6 +41,9 @@ io.on("connection", (socket) => {
 
   socket.on("answerCall", (data) => {
     io.to(data.to).emit("callAccepted", data.signal);
+  });
+  socket.on("message", (data) => {
+    console.log(`Mensagem recebida: ${data}`);
   });
 });
 
