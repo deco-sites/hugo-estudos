@@ -1,4 +1,4 @@
-import PersonalShopperStream from "./PersonalShopperStream.tsx";
+import PersonalShopperStream from "deco-sites/hugo-estudos/islands/PersonalShopperStream.tsx";
 
 export interface Props {
 }
