@@ -25,7 +25,6 @@ const PersonalShopperStream = () => {
   if (typeof window === "undefined") {
     return null;
   }
-  console.log("PersonalShopperStream.tsx -> io", ws.io);
   let socket: any;
   useEffect(() => {
     socket = ws.io.connect("http://localhost:5000");
