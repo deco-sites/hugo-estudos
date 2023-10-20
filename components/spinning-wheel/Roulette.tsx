@@ -1,6 +1,7 @@
 import Image from "apps/website/components/Image.tsx";
 import { Props } from "deco-sites/hugo-estudos/components/spinning-wheel/types.ts";
 
+
 const Roulette = ({ img, slices }: Props) => {
   console.log({ slices });
   const handleCLick = () => {
@@ -9,12 +10,15 @@ const Roulette = ({ img, slices }: Props) => {
     console.log(slices[indiceAleatorio].discountValue);
   };
   return (
-    <Image
-      onClick={() => handleCLick}
-      src={img}
-      width={300}
-      height={300}
-    />
+    <div>
+      <button onClick={() => alert("asd")}>alert</button>
+      <Image
+        // onClick={() => handleCLick}
+        src={img}
+        width={300}
+        height={300}
+      />
+    </div>
   );
 };
 

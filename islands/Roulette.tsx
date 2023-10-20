@@ -1,5 +1,5 @@
 import Component from "$store/components/spinning-wheel/Roulette.tsx";
-import type { Props } from "$store/components/spinning-wheel/types.ts";
+import type { Props } from "$store/components/spinning-wheel/Roulette.tsx";
 
 function Island(props: Props) {
   return <Component {...props} />;
