@@ -2,9 +2,11 @@ import Image from "apps/website/components/Image.tsx";
 import { Props } from "deco-sites/hugo-estudos/components/spinning-wheel/types.ts";
 
 const Roulette = ({ img, slices }: Props) => {
+  console.log({ slices });
   const handleCLick = () => {
+    console.log("click");
     const indiceAleatorio = Math.floor(Math.random() * slices.length);
-    alert(slices[indiceAleatorio].discountValue);
+    console.log(slices[indiceAleatorio].discountValue);
   };
   return (
     <Image
