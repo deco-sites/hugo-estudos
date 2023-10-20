@@ -1,16 +1,9 @@
-export interface Props {
-}
+import {Props} from "deco-sites/hugo-estudos/components/spinning-wheel/types.ts"
+import Roulette from "deco-sites/hugo-estudos/components/spinning-wheel/Roulette.tsx";
 
-const SpinningWheel = () => {
+const SpinningWheel = (props: Props) => {
   return (
-    <div class="w-52 h-52 relative rounded-full">
-      <div class="w-52 h-52 absolute" style={{ clip: "rect(0,100px,200px,0)" }}>
-      </div>
-      <div class="w-52 h-52 absolute" style={{ clip: "rect(0,100px,200px,0)" }}>
-      </div>
-      <div class="w-52 h-52 absolute" style={{ clip: "rect(0,100px,200px,0)" }}>
-      </div>
-    </div>
+    <Roulette {...props}/>
   );
 };
 

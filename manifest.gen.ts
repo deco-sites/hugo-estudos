@@ -28,7 +28,8 @@ import * as $$$$$$21 from "./sections/Product/SearchResult.tsx";
 import * as $$$$$$22 from "./sections/Product/Wishlist.tsx";
 import * as $$$$$$23 from "./sections/Social/InstagramPosts.tsx";
 import * as $$$$$$24 from "./sections/Social/WhatsApp.tsx";
-import * as $$$$$$25 from "./sections/Theme/Theme.tsx";
+import * as $$$$$$25 from "./sections/SpinningWheel/SpinningWheel.tsx";
+import * as $$$$$$26 from "./sections/Theme/Theme.tsx";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
 
@@ -65,7 +66,9 @@ const manifest = {
     "deco-sites/hugo-estudos/sections/Product/Wishlist.tsx": $$$$$$22,
     "deco-sites/hugo-estudos/sections/Social/InstagramPosts.tsx": $$$$$$23,
     "deco-sites/hugo-estudos/sections/Social/WhatsApp.tsx": $$$$$$24,
-    "deco-sites/hugo-estudos/sections/Theme/Theme.tsx": $$$$$$25,
+    "deco-sites/hugo-estudos/sections/SpinningWheel/SpinningWheel.tsx":
+      $$$$$$25,
+    "deco-sites/hugo-estudos/sections/Theme/Theme.tsx": $$$$$$26,
   },
   "apps": {
     "deco-sites/hugo-estudos/apps/decohub.ts": $$$$$$$$$$$0,
