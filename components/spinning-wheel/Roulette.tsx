@@ -1,24 +1,23 @@
 import Image from "apps/website/components/Image.tsx";
 import { Props } from "deco-sites/hugo-estudos/components/spinning-wheel/types.ts";
 
-
-const Roulette = ({ img, slices }: Props) => {
+const Roulette = ({ img, slices, positionDegree }: Props) => {
   console.log({ slices });
   const handleCLick = () => {
-    console.log("click");
     const indiceAleatorio = Math.floor(Math.random() * slices.length);
-    console.log(slices[indiceAleatorio].discountValue);
+    console.log({
+      index: indiceAleatorio,
+      value: slices[indiceAleatorio].discountValue,
+    });
+    //TODO: ajustar a rotação multiplicando indiceAleatorio + 1 x positionDegree
   };
   return (
-    <div>
-      <button onClick={() => alert("asd")}>alert</button>
-      <Image
-        // onClick={() => handleCLick}
-        src={img}
-        width={300}
-        height={300}
-      />
-    </div>
+    <Image
+      onClick={handleCLick}
+      src={img}
+      width={300}
+      height={300}
+    />
   );
 };
 
