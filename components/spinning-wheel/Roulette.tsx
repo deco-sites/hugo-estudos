@@ -14,21 +14,23 @@ const Roulette = ({ img, slices, positionDegree = 52 }: Props) => {
       index: indiceAleatorio,
       value: slices[indiceAleatorio].discountValue,
     });
-    // await new Promise((resolve) => setTimeout(resolve, 1010));
-    await new Promise((resolve) => setTimeout(resolve, 1050));
-    setRotationValue(indiceAleatorio * positionDegree);
-  };
 
-  useEffect(() => {
-    console.log(rotationValue);
-  }, [rotationValue]);
+    await new Promise((resolve) => setTimeout(resolve, 10100));
+    setRotationValue(indiceAleatorio * positionDegree);
+    // if(slices[indiceAleatorio].discountValue === -1){
+    if (slices[indiceAleatorio].discountValue === 20) {
+      setRotate(false);
+      return;
+    }
+    // await new Promise((resolve) => setTimeout(resolve, 1010));
+  };
 
   return (
     <Image
       style={{
         transform: `rotate(${rotationValue}deg)`,
       }}
-      class={`transition duration-[5000ms] ease-out ${rotate && "rotate"} `}
+      class={`transition duration-[1000ms] ease-out ${rotate && "rotate"} `}
       onClick={handleCLick}
       src={img}
       width={300}
