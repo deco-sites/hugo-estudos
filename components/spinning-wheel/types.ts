@@ -6,5 +6,4 @@ export interface Slice {
 export interface Props {
   img: ImageWidget;
   slices: Slice[];
-  positionDegree: number;
 }
