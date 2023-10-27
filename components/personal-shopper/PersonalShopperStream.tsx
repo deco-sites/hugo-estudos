@@ -1,177 +1,142 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import * as ws from "socket-io";
-//ts-ignore
-// import Peer from "npm:simple-peer";
-// import * as CopyToClipboard from "npm:react-copy-to-clipboard";
 
 export interface Props {}
+const webSocket = new WebSocket("ws://localhost:5000");
 
 const PersonalShopperStream = () => {
-  const [me, setMe] = useState("");
-  const [stream, setStream] = useState<MediaStream>();
-  const [receivingCall, setReceivingCall] = useState(false);
-  const [caller, setCaller] = useState("");
-  const [callerSignal, setCallerSignal] = useState();
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [callEnded, setCallEnded] = useState(false);
-  const [idToCall, setIdToCall] = useState("");
-  const [name, setName] = useState("");
+  const [cameraOff, setCameraOff] = useState(false);
+  const [audioOff, setAudioOff] = useState(false);
+  const [inputUsername, setInputUsername] = useState("");
+  const [localStream, setLocalStream] = useState<any>();
 
   const myVideo = useRef<HTMLVideoElement>(null);
-  const userVideo = useRef<HTMLVideoElement>(null);
-  const connectionRef = useRef<any>(null);
+  const remoteVideo = useRef<HTMLVideoElement>(null);
+  //TODO: leave call com connectionRef.current.destroy()
+  // const connectionRef= useRef<any>(null)
 
-  console.log("WINDOW", typeof window);
-  if (typeof window === "undefined") {
-    return null;
+
+  webSocket.onmessage = (event) => {
+    handleSignallingData(JSON.parse(event.data));
+  };
+
+  function handleSignallingData(data: any) {
+    switch (data.type) {
+      case "answer":
+        peerConn.setRemoteDescription(data.answer);
+        break;
+      case "candidate":
+        peerConn.addIceCandidate(data.candidate);
+    }
   }
-  let socket: any;
-  useEffect(() => {
-    socket = ws.io.connect("http://localhost:5000");
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        console.log("PersonalShopperStream.tsx -> stream", stream);
-        setStream(stream);
-        if (myVideo?.current) myVideo.current.srcObject = stream;
+
+  function sendUsername() {
+    sendData({
+      type: "store_user",
+    });
+  }
+
+  function sendData(data: any) {
+    data.username = inputUsername;
+    webSocket.send(JSON.stringify(data));
+  }
+
+  let peerConn: any;
+  function startCall() {
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        frameRate: 24,
+        width: {
+          min: 480,
+          ideal: 720,
+          max: 1280,
+        },
+        aspectRatio: 1.33333,
+      },
+      audio: true,
+    }).then((stream) => {
+      setLocalStream(stream);
+      if (myVideo.current) myVideo.current.srcObject = stream;
+
+      const configuration = {
+        iceServers: [
+          {
+            "urls": [
+              "stun:stun.l.google.com:19302",
+              "stun:stun1.l.google.com:19302",
+              "stun:stun2.l.google.com:19302",
+            ],
+          },
+        ],
+      };
+
+      peerConn = new RTCPeerConnection(configuration);
+      peerConn.addStream(localStream);
+
+      // quando alguem conectar e adcionar um stream, o mesmo será exibido no video
+      peerConn.onaddstream = (e: any) => {
+        if (remoteVideo.current) remoteVideo.current.srcObject = e.stream;
+      };
+
+      peerConn.onicecandidate = (e: any) => {
+        if (e.candidate == null) {
+          return;
+        }
+        sendData({
+          type: "store_candidate",
+          candidate: e.candidate,
+        });
+      };
+
+      createAndSendOffer();
+    });
+  }
+
+  function createAndSendOffer() {
+    // quando a oferta é criada o peerconection começa a colher icecandidates
+    // esses icecandidates precisam ser enviados para o server que por sua vez enviará para a pessoa que esta tentando conectar
+    peerConn.createOffer((offer: any) => {
+      sendData({
+        type: "store_offer",
+        offer: offer,
       });
 
-    socket.on("me", (id: string) => {
-      console.log("PersonalShopperStream.tsx -> id", id);
-
-      setMe(id);
+      peerConn.setLocalDescription(offer);
+    }, (error: any) => {
+      console.log(error);
     });
+  }
 
-    socket.on("callUser", (data: any) => {
-      console.log("PersonalShopperStream.tsx -> data", data);
+  function muteAudio() {
+    localStream.getAudioTracks()[0].enabled = !audioOff;
+    setAudioOff((prev) => !prev);
+  }
 
-      setReceivingCall(true);
-      setCaller(data.from);
-      setName(data.name);
-      setCallerSignal(data.signal);
-    });
-  }, []);
-
-  const callUser = (id: string) => {
-    console.log("App.js -> callUser -> id", id);
-
-    // const peer = new Peer({
-    //   initiator: true,
-    //   trickle: false,
-    //   stream: stream,
-    // });
-    // peer.on("signal", (data: any) => {
-    //   console.log("App.js -> callUser -> data", data);
-
-    //   socket.emit("callUser", {
-    //     userToCall: id,
-    //     signalData: data,
-    //     from: me,
-    //     name: name,
-    //   });
-    // });
-    // peer.on("stream", (stream: MediaProvider) => {
-    //   if (userVideo?.current) userVideo.current.srcObject = stream;
-    // });
-    socket.on("callAccepted", (signal: any) => {
-      setCallAccepted(true);
-      // peer.signal(signal);
-    });
-
-    // connectionRef.current = peer;
-  };
-
-  const answerCall = () => {
-    setCallAccepted(true);
-    // const peer = new Peer({
-    //   initiator: false,
-    //   trickle: false,
-    //   stream: stream,
-    // });
-    // peer.on("signal", (data: any) => {
-    //   socket.emit("answerCall", { signal: data, to: caller });
-    // });
-    // peer.on("stream", (stream: MediaProvider) => {
-    //   if (userVideo?.current) userVideo.current.srcObject = stream;
-    // });
-
-    // peer.signal(callerSignal);
-    // connectionRef.current = peer;
-  };
-
-  const leaveCall = () => {
-    setCallEnded(true);
-    connectionRef.current.destroy();
-  };
+  function closeCamera() {
+    localStream.getVideoTracks()[0].enabled = !cameraOff;
+    setCameraOff((prev) => !prev);
+  }
 
   return (
     <>
-      <h1 style={{ textAlign: "center", color: "#fff" }}>Zoomish</h1>
-      <div className="container">
-        <div className="video-container">
-          <div className="video">
-            {stream && (
-              <video
-                playsInline
-                muted
-                ref={myVideo}
-                autoPlay
-                style={{ width: "300px" }}
-              />
-            )}
-          </div>
-          <div className="video">
-            {callAccepted && !callEnded
-              ? (
-                <video
-                  playsInline
-                  ref={userVideo}
-                  autoPlay
-                  style={{ width: "300px" }}
-                />
-              )
-              : null}
-          </div>
-        </div>
-        <div className="myId">
-          <input
-            id="filled-basic"
-            label="Name"
-            value={name}
-            onChange={(e) => setName((e?.target as HTMLInputElement).value)}
-            style={{ marginBottom: "20px" }}
-          />
-
-          <input value={me} />
-
-          <input
-            id="filled-basic"
-            label="ID to call"
-            value={idToCall}
-            onChange={(e) => setIdToCall((e?.target as HTMLInputElement).value)}
-          />
-          <div className="call-button">
-            {callAccepted && !callEnded
-              ? (
-                <button onClick={leaveCall}>
-                  End Call
-                </button>
-              )
-              : <button>Call</button>}
-            {idToCall}
-          </div>
-        </div>
-        <div>
-          {receivingCall && !callAccepted
-            ? (
-              <div className="caller">
-                <h1>{name} is calling...</h1>
-                <button onClick={answerCall}>
-                  Answer
-                </button>
-              </div>
-            )
-            : null}
+      <div>
+        <input
+          placeholder="Enter username..."
+          type="text"
+          id="username-input"
+          value={inputUsername}
+          onChange={(e) =>
+            setInputUsername((e?.target as HTMLInputElement)?.value)}
+        />
+        <br />
+        <button onClick={sendUsername}>Send</button>
+        <button onClick={startCall}>Start Call</button>
+      </div>
+      <div id="video-call-div">
+        <video ref={myVideo} muted id="local-video" autoPlay></video>
+        <video ref={remoteVideo} id="remote-video" autoPlay></video>
+        <div class="call-action-div">
+          <button onClick={closeCamera}>Close Camera</button>
+          <button onClick={muteAudio}>Mute Audio</button>
         </div>
       </div>
     </>
