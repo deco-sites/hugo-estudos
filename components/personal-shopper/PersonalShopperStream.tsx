@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
 export interface Props {}
-const webSocket = new WebSocket("ws://localhost:5000");
+const webSocket = new WebSocket("ws://localhost:3000/");
 
 const PersonalShopperStream = () => {
   const [cameraOff, setCameraOff] = useState(false);
@@ -13,7 +13,6 @@ const PersonalShopperStream = () => {
   const remoteVideo = useRef<HTMLVideoElement>(null);
   //TODO: leave call com connectionRef.current.destroy()
   // const connectionRef= useRef<any>(null)
-
 
   webSocket.onmessage = (event) => {
     handleSignallingData(JSON.parse(event.data));
@@ -117,7 +116,7 @@ const PersonalShopperStream = () => {
   }
 
   return (
-    <>
+    <div>
       <div>
         <input
           placeholder="Enter username..."
@@ -139,7 +138,7 @@ const PersonalShopperStream = () => {
           <button onClick={muteAudio}>Mute Audio</button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
