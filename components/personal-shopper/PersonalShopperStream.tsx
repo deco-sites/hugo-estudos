@@ -69,7 +69,7 @@ const PersonalShopperStream = () => {
       };
 
       peerConn = new RTCPeerConnection(configuration);
-      peerConn.addStream(localStream);
+      peerConn.addStream(stream);
 
       // quando alguem conectar e adcionar um stream, o mesmo será exibido no video
       peerConn.onaddstream = (e: any) => {

@@ -21,15 +21,16 @@ import * as $$$$$$14 from "./sections/Links/Shortcuts.tsx";
 import * as $$$$$$15 from "./sections/Miscellaneous/CampaignTimer.tsx";
 import * as $$$$$$16 from "./sections/Miscellaneous/CookieConsent.tsx";
 import * as $$$$$$17 from "./sections/Newsletter/Newsletter.tsx";
-import * as $$$$$$18 from "./sections/PersonalShopper/PersonalShopper.tsx";
-import * as $$$$$$19 from "./sections/Product/ProductDetails.tsx";
-import * as $$$$$$20 from "./sections/Product/ProductShelf.tsx";
-import * as $$$$$$21 from "./sections/Product/SearchResult.tsx";
-import * as $$$$$$22 from "./sections/Product/Wishlist.tsx";
-import * as $$$$$$23 from "./sections/Social/InstagramPosts.tsx";
-import * as $$$$$$24 from "./sections/Social/WhatsApp.tsx";
-import * as $$$$$$25 from "./sections/SpinningWheel/SpinningWheel.tsx";
-import * as $$$$$$26 from "./sections/Theme/Theme.tsx";
+import * as $$$$$$18 from "./sections/PersonalShopper/ClientShopper.tsx";
+import * as $$$$$$19 from "./sections/PersonalShopper/PersonalShopper.tsx";
+import * as $$$$$$20 from "./sections/Product/ProductDetails.tsx";
+import * as $$$$$$21 from "./sections/Product/ProductShelf.tsx";
+import * as $$$$$$22 from "./sections/Product/SearchResult.tsx";
+import * as $$$$$$23 from "./sections/Product/Wishlist.tsx";
+import * as $$$$$$24 from "./sections/Social/InstagramPosts.tsx";
+import * as $$$$$$25 from "./sections/Social/WhatsApp.tsx";
+import * as $$$$$$26 from "./sections/SpinningWheel/SpinningWheel.tsx";
+import * as $$$$$$27 from "./sections/Theme/Theme.tsx";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
 
@@ -58,17 +59,19 @@ const manifest = {
     "deco-sites/hugo-estudos/sections/Miscellaneous/CookieConsent.tsx":
       $$$$$$16,
     "deco-sites/hugo-estudos/sections/Newsletter/Newsletter.tsx": $$$$$$17,
-    "deco-sites/hugo-estudos/sections/PersonalShopper/PersonalShopper.tsx":
+    "deco-sites/hugo-estudos/sections/PersonalShopper/ClientShopper.tsx":
       $$$$$$18,
-    "deco-sites/hugo-estudos/sections/Product/ProductDetails.tsx": $$$$$$19,
-    "deco-sites/hugo-estudos/sections/Product/ProductShelf.tsx": $$$$$$20,
-    "deco-sites/hugo-estudos/sections/Product/SearchResult.tsx": $$$$$$21,
-    "deco-sites/hugo-estudos/sections/Product/Wishlist.tsx": $$$$$$22,
-    "deco-sites/hugo-estudos/sections/Social/InstagramPosts.tsx": $$$$$$23,
-    "deco-sites/hugo-estudos/sections/Social/WhatsApp.tsx": $$$$$$24,
+    "deco-sites/hugo-estudos/sections/PersonalShopper/PersonalShopper.tsx":
+      $$$$$$19,
+    "deco-sites/hugo-estudos/sections/Product/ProductDetails.tsx": $$$$$$20,
+    "deco-sites/hugo-estudos/sections/Product/ProductShelf.tsx": $$$$$$21,
+    "deco-sites/hugo-estudos/sections/Product/SearchResult.tsx": $$$$$$22,
+    "deco-sites/hugo-estudos/sections/Product/Wishlist.tsx": $$$$$$23,
+    "deco-sites/hugo-estudos/sections/Social/InstagramPosts.tsx": $$$$$$24,
+    "deco-sites/hugo-estudos/sections/Social/WhatsApp.tsx": $$$$$$25,
     "deco-sites/hugo-estudos/sections/SpinningWheel/SpinningWheel.tsx":
-      $$$$$$25,
-    "deco-sites/hugo-estudos/sections/Theme/Theme.tsx": $$$$$$26,
+      $$$$$$26,
+    "deco-sites/hugo-estudos/sections/Theme/Theme.tsx": $$$$$$27,
   },
   "apps": {
     "deco-sites/hugo-estudos/apps/decohub.ts": $$$$$$$$$$$0,

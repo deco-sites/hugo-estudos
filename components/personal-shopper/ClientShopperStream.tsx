@@ -1,6 +1,19 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
-const webSocket = new WebSocket("ws://localhost:5000");
+const webSocket = new WebSocket("ws://localhost:3000");
+const configuration = {
+  iceServers: [
+    {
+      "urls": [
+        "stun:stun.l.google.com:19302",
+        "stun:stun1.l.google.com:19302",
+        "stun:stun2.l.google.com:19302",
+      ],
+    },
+  ],
+};
+
+const peerConn = new RTCPeerConnection(configuration);
 
 export interface Props {}
 const ClientShopperStream = () => {
@@ -19,6 +32,7 @@ const ClientShopperStream = () => {
   };
 
   function handleSignallingData(data: any) {
+    console.log("peerConn", peerConn);
     switch (data.type) {
       case "offer":
         peerConn.setRemoteDescription(data.offer);
@@ -58,20 +72,8 @@ const ClientShopperStream = () => {
       setLocalStream(stream);
       if (myVideo.current) myVideo.current.srcObject = stream;
 
-      const configuration = {
-        iceServers: [
-          {
-            "urls": [
-              "stun:stun.l.google.com:19302",
-              "stun:stun1.l.google.com:19302",
-              "stun:stun2.l.google.com:19302",
-            ],
-          },
-        ],
-      };
-
-      peerConn = new RTCPeerConnection(configuration);
-      peerConn.addStream(localStream);
+      // peerConn.addStream(localStream);
+      peerConn.addStream(stream);
 
       peerConn.onaddstream = (e: any) => {
         if (remoteVideo.current) remoteVideo.current.srcObject = e.stream;
