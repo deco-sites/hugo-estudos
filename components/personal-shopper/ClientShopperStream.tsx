@@ -1,20 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import SellerUtils from "./utils/SellerUtils.ts";
 
-const configuration = {
-  iceServers: [
-    {
-      "urls": [
-        "stun:stun.l.google.com:19302",
-        "stun:stun1.l.google.com:19302",
-        "stun:stun2.l.google.com:19302",
-      ],
-    },
-  ],
-};
-
-let peerConn: RTCPeerConnection;
-let webSocket: WebSocket;
 let sellerUtils: SellerUtils;
 
 export interface Props {}

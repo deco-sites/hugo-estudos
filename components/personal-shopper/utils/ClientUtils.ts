@@ -1,44 +1,9 @@
-import { Ref } from "https://esm.sh/v128/preact@10.15.1/hooks/src/index.js";
-import { StateUpdater } from "https://esm.sh/v128/preact@10.15.1/hooks/src/index.js";
+import BaseUtils from "deco-sites/hugo-estudos/components/personal-shopper/utils/BaseUtils.ts";
+import { Ref, StateUpdater } from "https://esm.sh/v128/preact@10.15.1/hooks/src/index.js";
 
-export default class ClientUtils {
-  userName: string | null = null;
-  peerConn: RTCPeerConnection;
-  webSocket: WebSocket;
-
+export default class ClientUtils extends BaseUtils {
   constructor() {
-    const configuration: RTCConfiguration = {
-      iceServers: [
-        {
-          "urls": [
-            "stun:stun.l.google.com:19302",
-            "stun:stun1.l.google.com:19302",
-            "stun:stun2.l.google.com:19302",
-          ],
-        },
-      ],
-    };
-
-    this.peerConn = new RTCPeerConnection(configuration);
-    this.webSocket = new WebSocket("ws://localhost:3000/");
-    this.webSocket.onmessage = (event) => {
-      this._handleSignallingData(JSON.parse(event.data));
-    };
-  }
-
-  private _handleSignallingData(data: any) {
-    switch (data.type) {
-      case "answer":
-        this.peerConn.setRemoteDescription(data.answer);
-        break;
-      case "candidate":
-        this.peerConn.addIceCandidate(data.candidate);
-    }
-  }
-
-  private _sendData(data: any) {
-    data.username = this.userName;
-    this.webSocket.send(JSON.stringify(data));
+    super();
   }
 
   sendUsername(userName: string) {
@@ -46,6 +11,16 @@ export default class ClientUtils {
     this._sendData({
       type: "store_user",
     });
+  }
+
+  protected _handleSignallingData(data: any) {
+    switch (data.type) {
+      case "answer":
+        this.peerConn.setRemoteDescription(data.answer);
+        break;
+      case "candidate":
+        this.peerConn.addIceCandidate(data.candidate);
+    }
   }
 
   startCall(
@@ -91,7 +66,6 @@ export default class ClientUtils {
       }
     };
   }
-
   private _createAndSendOffer() {
     // quando a oferta é criada o peerconection começa a colher icecandidates
     // esses icecandidates precisam ser enviados para o server que por sua vez enviará para a pessoa que esta tentando conectar
@@ -105,25 +79,5 @@ export default class ClientUtils {
     }, (error) => {
       console.log(error);
     });
-  }
-
-  muteAudio(
-    localStream: MediaStream | undefined,
-    audioOff: boolean,
-    setAudioOff: StateUpdater<boolean>,
-  ) {
-    if (!localStream) return;
-    localStream.getAudioTracks()[0].enabled = !audioOff;
-    setAudioOff((prev) => !prev);
-  }
-
-  closeCamera(
-    localStream: MediaStream | undefined,
-    cameraOff: boolean,
-    setCameraOff: StateUpdater<boolean>,
-  ) {
-    if (!localStream) return;
-    localStream.getAudioTracks()[0].enabled = !cameraOff;
-    setCameraOff((prev) => !prev);
   }
 }
