@@ -1,21 +1,9 @@
 import { useEffect, useRef, useState } from "preact/hooks";
+import ClientUtils from "./utils/ClientUtils.ts";
 
 export interface Props {}
 
-let peerConn: RTCPeerConnection;
-let webSocket: WebSocket;
-
-const configuration = {
-  iceServers: [
-    {
-      "urls": [
-        "stun:stun.l.google.com:19302",
-        "stun:stun1.l.google.com:19302",
-        "stun:stun2.l.google.com:19302",
-      ],
-    },
-  ],
-};
+let clientUtils: ClientUtils;
 
 const PersonalShopperStream = () => {
   const [cameraOff, setCameraOff] = useState(false);
@@ -29,101 +17,8 @@ const PersonalShopperStream = () => {
   // const connectionRef= useRef<any>(null)
 
   useEffect(() => {
-    peerConn = new RTCPeerConnection(configuration);
-
-    webSocket = new WebSocket("ws://localhost:3000/");
-    webSocket.onmessage = (event) => {
-      handleSignallingData(JSON.parse(event.data));
-    };
+    clientUtils = new ClientUtils();
   }, []);
-
-  function handleSignallingData(data: any) {
-    switch (data.type) {
-      case "answer":
-        peerConn.setRemoteDescription(data.answer);
-        break;
-      case "candidate":
-        peerConn.addIceCandidate(data.candidate);
-    }
-  }
-
-  function sendUsername() {
-    sendData({
-      type: "store_user",
-    });
-  }
-
-  function sendData(data: any) {
-    data.username = inputUsername;
-    webSocket.send(JSON.stringify(data));
-  }
-
-  function startCall() {
-    navigator.mediaDevices.getUserMedia({
-      video: {
-        frameRate: 24,
-        width: {
-          min: 480,
-          ideal: 720,
-          max: 1280,
-        },
-        aspectRatio: 1.33333,
-      },
-      audio: true,
-    }).then((stream) => {
-      setLocalStream(stream);
-      if (myVideo.current) myVideo.current.srcObject = stream;
-
-      stream.getTracks().forEach((track) => {
-        peerConn.addTrack(track, stream);
-      });
-
-      peerConn.onicecandidate = (e: any) => {
-        if (e.candidate == null) {
-          return;
-        }
-        sendData({
-          type: "store_candidate",
-          candidate: e.candidate,
-        });
-      };
-
-      createAndSendOffer();
-    });
-    // quando alguem conectar e adcionar um stream, o mesmo será exibido no video
-    peerConn.ontrack = (e) => {
-      if (remoteVideo.current) {
-        remoteVideo.current.srcObject = e.streams[0];
-      }
-    };
-  }
-
-  function createAndSendOffer() {
-    // quando a oferta é criada o peerconection começa a colher icecandidates
-    // esses icecandidates precisam ser enviados para o server que por sua vez enviará para a pessoa que esta tentando conectar
-    peerConn.createOffer((offer: any) => {
-      sendData({
-        type: "store_offer",
-        offer: offer,
-      });
-
-      peerConn.setLocalDescription(offer);
-    }, (error: any) => {
-      console.log(error);
-    });
-  }
-
-  function muteAudio() {
-    if (!localStream) return;
-    localStream.getAudioTracks()[0].enabled = !audioOff;
-    setAudioOff((prev) => !prev);
-  }
-
-  function closeCamera() {
-    if (!localStream) return;
-    localStream.getVideoTracks()[0].enabled = !cameraOff;
-    setCameraOff((prev) => !prev);
-  }
 
   return (
     <div>
@@ -137,15 +32,32 @@ const PersonalShopperStream = () => {
             setInputUsername((e?.target as HTMLInputElement)?.value)}
         />
         <br />
-        <button onClick={sendUsername}>Send</button>
-        <button onClick={startCall}>Start Call</button>
+        <button onClick={() => clientUtils.sendUsername(inputUsername)}>
+          Send
+        </button>
+        <button
+          onClick={() =>
+            clientUtils.startCall(setLocalStream, myVideo, remoteVideo)}
+        >
+          Start Call
+        </button>
       </div>
       <div id="video-call-div">
         <video ref={myVideo} muted id="local-video" autoPlay></video>
         <video ref={remoteVideo} id="remote-video" autoPlay></video>
         <div class="call-action-div">
-          <button onClick={closeCamera}>Close Camera</button>
-          <button onClick={muteAudio}>Mute Audio</button>
+          <button
+            onClick={() =>
+              clientUtils.closeCamera(localStream, cameraOff, setCameraOff)}
+          >
+            Close Camera
+          </button>
+          <button
+            onClick={() =>
+              clientUtils.muteAudio(localStream, audioOff, setAudioOff)}
+          >
+            Mute Audio
+          </button>
         </div>
       </div>
     </div>
