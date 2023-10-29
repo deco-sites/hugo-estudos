@@ -116,7 +116,7 @@ export default class ClientUtils {
     localStream.getAudioTracks()[0].enabled = !audioOff;
     setAudioOff((prev) => !prev);
   }
-  
+
   closeCamera(
     localStream: MediaStream | undefined,
     cameraOff: boolean,
