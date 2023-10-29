@@ -39,7 +39,6 @@ const ClientShopperStream = () => {
   function handleSignallingData(data: any) {
     switch (data.type) {
       case "offer":
-        console.log("inputUsername", inputUsername);
         peerConn.setRemoteDescription(data.offer);
         createAndSendAnswer();
         break;
@@ -49,7 +48,6 @@ const ClientShopperStream = () => {
   }
 
   function createAndSendAnswer() {
-    console.log("create:", inputUsername);
     peerConn.createAnswer((answer: any) => {
       peerConn.setLocalDescription(answer);
       sendData({
@@ -106,7 +104,6 @@ const ClientShopperStream = () => {
     data.username = data.type === "send_answer"
       ? refInput?.current?.value
       : inputUsername;
-    console.log("DATA", data);
     webSocket.send(JSON.stringify(data));
   }
 

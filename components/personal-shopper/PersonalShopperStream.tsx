@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 
 export interface Props {}
 
-let peerConn: any;
+let peerConn: RTCPeerConnection;
 let webSocket: WebSocket;
 
 const configuration = {
@@ -40,15 +40,9 @@ const PersonalShopperStream = () => {
   function handleSignallingData(data: any) {
     switch (data.type) {
       case "answer":
-        console.log("111111111111");
         peerConn.setRemoteDescription(data.answer);
         break;
       case "candidate":
-        console.log("22222222222");
-        console.log(
-          "PersonalShopperStream.tsx -> handleSignallingData -> data.candidate",
-          data.candidate,
-        );
         peerConn.addIceCandidate(data.candidate);
     }
   }
@@ -80,12 +74,9 @@ const PersonalShopperStream = () => {
       setLocalStream(stream);
       if (myVideo.current) myVideo.current.srcObject = stream;
 
-      peerConn.addStream(stream);
-
-      // quando alguem conectar e adcionar um stream, o mesmo será exibido no video
-      peerConn.onaddstream = (e: any) => {
-        if (remoteVideo.current) remoteVideo.current.srcObject = e.stream;
-      };
+      stream.getTracks().forEach((track) => {
+        peerConn.addTrack(track, stream);
+      });
 
       peerConn.onicecandidate = (e: any) => {
         if (e.candidate == null) {
@@ -99,6 +90,12 @@ const PersonalShopperStream = () => {
 
       createAndSendOffer();
     });
+    // quando alguem conectar e adcionar um stream, o mesmo será exibido no video
+    peerConn.ontrack = (e) => {
+      if (remoteVideo.current) {
+        remoteVideo.current.srcObject = e.streams[0];
+      }
+    };
   }
 
   function createAndSendOffer() {
