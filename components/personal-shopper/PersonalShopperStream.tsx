@@ -1,7 +1,21 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
 export interface Props {}
-const webSocket = new WebSocket("ws://localhost:3000/");
+
+let peerConn: any;
+let webSocket: WebSocket;
+
+const configuration = {
+  iceServers: [
+    {
+      "urls": [
+        "stun:stun.l.google.com:19302",
+        "stun:stun1.l.google.com:19302",
+        "stun:stun2.l.google.com:19302",
+      ],
+    },
+  ],
+};
 
 const PersonalShopperStream = () => {
   const [cameraOff, setCameraOff] = useState(false);
@@ -14,16 +28,27 @@ const PersonalShopperStream = () => {
   //TODO: leave call com connectionRef.current.destroy()
   // const connectionRef= useRef<any>(null)
 
-  webSocket.onmessage = (event) => {
-    handleSignallingData(JSON.parse(event.data));
-  };
+  useEffect(() => {
+    peerConn = new RTCPeerConnection(configuration);
+
+    webSocket = new WebSocket("ws://localhost:3000/");
+    webSocket.onmessage = (event) => {
+      handleSignallingData(JSON.parse(event.data));
+    };
+  }, []);
 
   function handleSignallingData(data: any) {
     switch (data.type) {
       case "answer":
+        console.log("111111111111");
         peerConn.setRemoteDescription(data.answer);
         break;
       case "candidate":
+        console.log("22222222222");
+        console.log(
+          "PersonalShopperStream.tsx -> handleSignallingData -> data.candidate",
+          data.candidate,
+        );
         peerConn.addIceCandidate(data.candidate);
     }
   }
@@ -39,7 +64,6 @@ const PersonalShopperStream = () => {
     webSocket.send(JSON.stringify(data));
   }
 
-  let peerConn: any;
   function startCall() {
     navigator.mediaDevices.getUserMedia({
       video: {
@@ -56,19 +80,6 @@ const PersonalShopperStream = () => {
       setLocalStream(stream);
       if (myVideo.current) myVideo.current.srcObject = stream;
 
-      const configuration = {
-        iceServers: [
-          {
-            "urls": [
-              "stun:stun.l.google.com:19302",
-              "stun:stun1.l.google.com:19302",
-              "stun:stun2.l.google.com:19302",
-            ],
-          },
-        ],
-      };
-
-      peerConn = new RTCPeerConnection(configuration);
       peerConn.addStream(stream);
 
       // quando alguem conectar e adcionar um stream, o mesmo será exibido no video

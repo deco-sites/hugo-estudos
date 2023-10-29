@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 
-const webSocket = new WebSocket("ws://localhost:3000");
 const configuration = {
   iceServers: [
     {
@@ -13,7 +12,8 @@ const configuration = {
   ],
 };
 
-const peerConn = new RTCPeerConnection(configuration);
+let peerConn: any;
+let webSocket: WebSocket;
 
 export interface Props {}
 const ClientShopperStream = () => {
@@ -24,17 +24,22 @@ const ClientShopperStream = () => {
 
   const myVideo = useRef<HTMLVideoElement>(null);
   const remoteVideo = useRef<HTMLVideoElement>(null);
+  const refInput = useRef<HTMLInputElement>(null);
   //TODO: leave call com connectionRef.current.destroy()
   // const connectionRef= useRef<any>(null)
 
-  webSocket.onmessage = (event) => {
-    handleSignallingData(JSON.parse(event.data));
-  };
+  useEffect(() => {
+    peerConn = new RTCPeerConnection(configuration);
+    webSocket = new WebSocket("ws://localhost:3000");
+    webSocket.onmessage = (event) => {
+      handleSignallingData(JSON.parse(event.data));
+    };
+  }, []);
 
   function handleSignallingData(data: any) {
-    console.log("peerConn", peerConn);
     switch (data.type) {
       case "offer":
+        console.log("inputUsername", inputUsername);
         peerConn.setRemoteDescription(data.offer);
         createAndSendAnswer();
         break;
@@ -44,6 +49,7 @@ const ClientShopperStream = () => {
   }
 
   function createAndSendAnswer() {
+    console.log("create:", inputUsername);
     peerConn.createAnswer((answer: any) => {
       peerConn.setLocalDescription(answer);
       sendData({
@@ -55,7 +61,7 @@ const ClientShopperStream = () => {
     });
   }
 
-  let peerConn: any;
+  // let peerConn: any;
   function joinCall() {
     navigator.mediaDevices.getUserMedia({
       video: {
@@ -97,7 +103,10 @@ const ClientShopperStream = () => {
   }
 
   function sendData(data: any) {
-    data.username = inputUsername;
+    data.username = data.type === "send_answer"
+      ? refInput?.current?.value
+      : inputUsername;
+    console.log("DATA", data);
     webSocket.send(JSON.stringify(data));
   }
 
@@ -116,6 +125,7 @@ const ClientShopperStream = () => {
         <input
           placeholder="Enter username..."
           type="text"
+          ref={refInput}
           id="username-input"
           value={inputUsername}
           onChange={(e) =>
