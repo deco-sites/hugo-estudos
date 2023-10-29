@@ -21,7 +21,7 @@ const PersonalShopperStream = () => {
   const [cameraOff, setCameraOff] = useState(false);
   const [audioOff, setAudioOff] = useState(false);
   const [inputUsername, setInputUsername] = useState("");
-  const [localStream, setLocalStream] = useState<any>();
+  const [localStream, setLocalStream] = useState<MediaStream>();
 
   const myVideo = useRef<HTMLVideoElement>(null);
   const remoteVideo = useRef<HTMLVideoElement>(null);
@@ -114,11 +114,13 @@ const PersonalShopperStream = () => {
   }
 
   function muteAudio() {
+    if (!localStream) return;
     localStream.getAudioTracks()[0].enabled = !audioOff;
     setAudioOff((prev) => !prev);
   }
 
   function closeCamera() {
+    if (!localStream) return;
     localStream.getVideoTracks()[0].enabled = !cameraOff;
     setCameraOff((prev) => !prev);
   }

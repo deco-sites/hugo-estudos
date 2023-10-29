@@ -12,7 +12,7 @@ const configuration = {
   ],
 };
 
-let peerConn: any;
+let peerConn: RTCPeerConnection;
 let webSocket: WebSocket;
 
 export interface Props {}
@@ -20,7 +20,7 @@ const ClientShopperStream = () => {
   const [cameraOff, setCameraOff] = useState(false);
   const [audioOff, setAudioOff] = useState(false);
   const [inputUsername, setInputUsername] = useState("");
-  const [localStream, setLocalStream] = useState<any>();
+  const [localStream, setLocalStream] = useState<MediaStream>();
 
   const myVideo = useRef<HTMLVideoElement>(null);
   const remoteVideo = useRef<HTMLVideoElement>(null);
@@ -77,11 +77,9 @@ const ClientShopperStream = () => {
       if (myVideo.current) myVideo.current.srcObject = stream;
 
       // peerConn.addStream(localStream);
-      peerConn.addStream(stream);
-
-      peerConn.onaddstream = (e: any) => {
-        if (remoteVideo.current) remoteVideo.current.srcObject = e.stream;
-      };
+      stream.getTracks().forEach((track) => {
+        peerConn.addTrack(track, stream);
+      });
 
       peerConn.onicecandidate = (e: any) => {
         if (e.candidate == null) {
@@ -98,6 +96,12 @@ const ClientShopperStream = () => {
         type: "join_call",
       });
     });
+    // quando alguem conectar e adcionar um stream, o mesmo será exibido no video
+    peerConn.ontrack = (e) => {
+      if (remoteVideo.current) {
+        remoteVideo.current.srcObject = e.streams[0];
+      }
+    };
   }
 
   function sendData(data: any) {
@@ -108,11 +112,15 @@ const ClientShopperStream = () => {
   }
 
   function muteAudio() {
+    if (!localStream) return;
+
     localStream.getAudioTracks()[0].enabled = !audioOff;
     setAudioOff((prev) => !prev);
   }
 
   function closeCamera() {
+    if (!localStream) return;
+
     localStream.getVideoTracks()[0].enabled = !cameraOff;
     setCameraOff((prev) => !prev);
   }
