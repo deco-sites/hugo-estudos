@@ -6,19 +6,23 @@ import {
 } from "deco-sites/hugo-estudos/components/personal-shopper/utils/utils.ts";
 import { lazy, Suspense } from "preact/compat";
 import Spinner from "deco-sites/hugo-estudos/components/ui/Spinner.tsx";
+import useCategorySeller from "deco-sites/hugo-estudos/components/personal-shopper/hooks/useCategorySeller.tsx";
 
 const VideoModal = lazy(() =>
   import(
-    "deco-sites/hugo-estudos/components/personal-shopper/components/VideoModal.tsx"
+    "deco-sites/hugo-estudos/islands/VideoModal.tsx"
   )
 );
 
-export interface Props {}
+export interface Props {
+  category: string;
+}
 
-const PersonalShopperStream = () => {
+const PersonalShopperStream = ({ category }: Props) => {
   const [isAuth, setIsAuth] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>();
   const [btnLoading, setBtnLoading] = useState(false);
+  const { hasSeller } = useCategorySeller(category);
 
   const handleClick = async () => {
     setBtnLoading(true);
@@ -37,18 +41,24 @@ const PersonalShopperStream = () => {
   };
 
   return (
-    <div>
-      <Button loading={btnLoading} onClick={handleClick}>
-        Video call a seller
-      </Button>
-      {isAuth && userProfile
+    <>
+      {hasSeller
         ? (
-          <Suspense fallback={<Spinner />}>
-            <VideoModal userProfile={userProfile} />
-          </Suspense>
+          <div>
+            <Button loading={btnLoading} onClick={handleClick}>
+              Video call a seller
+            </Button>
+            {isAuth && userProfile
+              ? (
+                <Suspense fallback={<Spinner />}>
+                  <VideoModal userProfile={userProfile} />
+                </Suspense>
+              )
+              : <></>}
+          </div>
         )
         : <></>}
-    </div>
+    </>
   );
 };
 

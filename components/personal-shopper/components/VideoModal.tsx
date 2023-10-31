@@ -2,13 +2,11 @@ import { useMemo, useRef, useState } from "preact/hooks";
 import ClientUtils from "../utils/ClientUtils.ts";
 import { UserProfile } from "deco-sites/hugo-estudos/components/personal-shopper/utils/utils.ts";
 
-export interface Props{
-    userProfile: UserProfile
+export interface Props {
+  userProfile: UserProfile;
 }
 
-const VideoModal = ({userProfile}:Props) => {
-  const [cameraOff, setCameraOff] = useState(false);
-  const [audioOff, setAudioOff] = useState(false);
+const VideoModal = ({ userProfile }: Props) => {
   const [inputUsername, setInputUsername] = useState("");
   const [localStream, setLocalStream] = useState<MediaStream>();
 
@@ -46,14 +44,15 @@ const VideoModal = ({userProfile}:Props) => {
         <video ref={remoteVideo} id="remote-video" autoPlay></video>
         <div class="call-action-div">
           <button
-            onClick={() =>
-              clientUtils.closeCamera(localStream, cameraOff, setCameraOff)}
+            onClick={() => {
+              console.log("ASAS");
+              clientUtils.closeCamera(localStream);
+            }}
           >
             Close Camera
           </button>
           <button
-            onClick={() =>
-              clientUtils.muteAudio(localStream, audioOff, setAudioOff)}
+            onClick={() => clientUtils.muteAudio(localStream)}
           >
             Mute Audio
           </button>

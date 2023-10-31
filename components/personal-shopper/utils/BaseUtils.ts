@@ -34,21 +34,21 @@ export default abstract class BaseUtils {
 
   muteAudio(
     localStream: MediaStream | undefined,
-    audioOff: boolean,
-    setAudioOff: StateUpdater<boolean>,
   ) {
     if (!localStream) return;
-    localStream.getAudioTracks()[0].enabled = !audioOff;
-    setAudioOff((prev) => !prev);
+    const audioTrack = localStream.getAudioTracks()[0];
+    if (audioTrack) {
+      audioTrack.enabled = !audioTrack.enabled;
+    }
   }
 
   closeCamera(
     localStream: MediaStream | undefined,
-    cameraOff: boolean,
-    setCameraOff: StateUpdater<boolean>,
   ) {
     if (!localStream) return;
-    localStream.getAudioTracks()[0].enabled = !cameraOff;
-    setCameraOff((prev) => !prev);
+    const videoTrack = localStream.getVideoTracks()[0];
+    if (videoTrack) {
+      videoTrack.enabled = !videoTrack.enabled;
+    }
   }
 }

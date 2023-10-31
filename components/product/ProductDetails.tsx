@@ -21,6 +21,7 @@ import type { ProductDetailsPage } from "apps/commerce/types.ts";
 import { mapProductToAnalyticsItem } from "apps/commerce/utils/productToAnalyticsItem.ts";
 import Image from "apps/website/components/Image.tsx";
 import ProductSelector from "./ProductVariantSelector.tsx";
+import PersonalShopper from "deco-sites/hugo-estudos/sections/PersonalShopper/PersonalShopper.tsx";
 
 export interface Props {
   /** @title Integration */
@@ -75,6 +76,7 @@ function ProductInfo({ page, layout }: { page: ProductDetailsPage } & Props) {
     gtin,
     isVariantOf,
     additionalProperty = [],
+    category,
   } = product;
   const description = product.description || isVariantOf?.description;
   const {
@@ -132,6 +134,7 @@ function ProductInfo({ page, layout }: { page: ProductDetailsPage } & Props) {
       <div class="mt-4 sm:mt-6">
         <ProductSelector product={product} />
       </div>
+
       {/* Add to Cart and Favorites button */}
       <div class="mt-4 sm:mt-10 flex flex-col gap-2">
         {availability === "https://schema.org/InStock"
@@ -139,6 +142,8 @@ function ProductInfo({ page, layout }: { page: ProductDetailsPage } & Props) {
             <>
               {platform === "vtex" && (
                 <>
+                  {category &&
+                    <PersonalShopper category={category} />}
                   <AddToCartButtonVTEX
                     name={name}
                     productID={productID}
