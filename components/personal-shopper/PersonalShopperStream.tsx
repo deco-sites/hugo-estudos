@@ -20,23 +20,30 @@ export interface Props {
 
 const PersonalShopperStream = ({ category }: Props) => {
   const [isAuth, setIsAuth] = useState(false);
+  const [modalOpened, setModalOpened] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>();
   const [btnLoading, setBtnLoading] = useState(false);
   const { hasSeller } = useCategorySeller(category);
 
   const handleClick = async () => {
-    setBtnLoading(true);
-    const { auth, profileData } = await checkAuth() as {
-      auth: boolean;
-      profileData: UserProfile;
-    };
-
-    if (!auth) {
-      window.location.pathname = "/login";
+    if (modalOpened) {
+      setModalOpened(false);
+      return;
     }
+    if (!isAuth) {
+      setBtnLoading(true);
+      const { auth, profileData } = await checkAuth() as {
+        auth: boolean;
+        profileData: UserProfile;
+      };
 
-    setIsAuth(auth);
-    setUserProfile(profileData);
+      if (!auth) {
+        window.location.pathname = "/login";
+      }
+      setIsAuth(auth);
+      setUserProfile(profileData);
+    }
+    setModalOpened(true);
     setBtnLoading(false);
   };
 
@@ -44,17 +51,24 @@ const PersonalShopperStream = ({ category }: Props) => {
     <>
       {hasSeller
         ? (
-          <div>
-            <Button loading={btnLoading} onClick={handleClick}>
-              Video call a seller
-            </Button>
+          <div class="fixed bottom-[5%] right-[5%] z-50 flex flex-col items-end">
             {isAuth && userProfile
               ? (
                 <Suspense fallback={<Spinner />}>
-                  <VideoModal userProfile={userProfile} />
+                  <VideoModal
+                    userProfile={userProfile}
+                    modalOpened={modalOpened}
+                  />
                 </Suspense>
               )
               : <></>}
+            <Button
+              class={`shadow-xl w-40 ${!modalOpened ? "animate-pulse" : ""}`}
+              loading={btnLoading}
+              onClick={handleClick}
+            >
+              Video call a seller
+            </Button>
           </div>
         )
         : <></>}

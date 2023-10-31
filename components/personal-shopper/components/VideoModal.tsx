@@ -4,9 +4,10 @@ import { UserProfile } from "deco-sites/hugo-estudos/components/personal-shopper
 
 export interface Props {
   userProfile: UserProfile;
+  modalOpened: boolean;
 }
 
-const VideoModal = ({ userProfile }: Props) => {
+const VideoModal = ({ userProfile, modalOpened }: Props) => {
   const [inputUsername, setInputUsername] = useState("");
   const [localStream, setLocalStream] = useState<MediaStream>();
 
@@ -18,7 +19,7 @@ const VideoModal = ({ userProfile }: Props) => {
   const clientUtils = useMemo(() => new ClientUtils(), []);
 
   return (
-    <div>
+    <div class={`${modalOpened ? "block" : "hidden"}`}>
       <div>
         <input
           placeholder="Enter username..."
@@ -40,14 +41,12 @@ const VideoModal = ({ userProfile }: Props) => {
         </button>
       </div>
       <div id="video-call-div">
-        <video ref={myVideo} muted id="local-video" autoPlay></video>
+        <video ref={myVideo} muted id="local-video" autoPlay class="bg-black">
+        </video>
         <video ref={remoteVideo} id="remote-video" autoPlay></video>
         <div class="call-action-div">
           <button
-            onClick={() => {
-              console.log("ASAS");
-              clientUtils.closeCamera(localStream);
-            }}
+            onClick={() => clientUtils.closeCamera(localStream)}
           >
             Close Camera
           </button>
