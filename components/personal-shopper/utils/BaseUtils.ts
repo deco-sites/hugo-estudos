@@ -1,3 +1,4 @@
+import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from "https://esm.sh/@supabase/supabase-js@2.7.0";
 import { StateUpdater } from "https://esm.sh/v128/preact@10.15.1/hooks/src/index.js";
 
 export default abstract class BaseUtils {
@@ -28,8 +29,11 @@ export default abstract class BaseUtils {
   protected abstract _handleSignallingData(data: any): void;
 
   protected _sendData(data: any) {
-    data.username = this.userName;
-    this.webSocket.send(JSON.stringify(data));
+    return new Promise<void>((resolve) => {
+      data.username = this.userName;
+      this.webSocket.send(JSON.stringify(data));
+      resolve();
+    });
   }
 
   muteAudio(

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import ClientUtils from "../utils/ClientUtils.ts";
 import { UserProfile } from "deco-sites/hugo-estudos/components/personal-shopper/utils/utils.ts";
 
@@ -18,32 +18,34 @@ const VideoModal = ({ userProfile, modalOpened }: Props) => {
 
   const clientUtils = useMemo(() => new ClientUtils(), []);
 
+  useEffect(() => {
+    if (!clientUtils) return;
+
+    const initializeCall = async () => {
+      await clientUtils.sendUsername(userProfile.Email);
+      clientUtils.startCall(setLocalStream, myVideo, remoteVideo);
+    };
+    initializeCall();
+  }, [clientUtils]);
+
   return (
-    <div class={`${modalOpened ? "block" : "hidden"}`}>
-      <div>
-        <input
-          placeholder="Enter username..."
-          type="text"
-          id="username-input"
-          value={inputUsername}
-          onChange={(e) =>
-            setInputUsername((e?.target as HTMLInputElement)?.value)}
-        />
-        <br />
-        <button onClick={() => clientUtils.sendUsername(inputUsername)}>
-          Send
-        </button>
-        <button
-          onClick={() =>
-            clientUtils.startCall(setLocalStream, myVideo, remoteVideo)}
+    <div class={`${modalOpened ? "block" : "hidden"} mb-5`}>
+      <div id="video-call-div" class="relative">
+        <video
+          ref={myVideo}
+          muted
+          id="local-video"
+          autoPlay
+          class="bg-black max-h-20 absolute rounded-full bottom-0 right-0 border-2 border-white"
         >
-          Start Call
-        </button>
-      </div>
-      <div id="video-call-div">
-        <video ref={myVideo} muted id="local-video" autoPlay class="bg-black">
         </video>
-        <video ref={remoteVideo} id="remote-video" autoPlay></video>
+        <video
+          ref={remoteVideo}
+          id="remote-video"
+          autoPlay
+          class="bg-black max-h-64 "
+        >
+        </video>
         <div class="call-action-div">
           <button
             onClick={() => clientUtils.closeCamera(localStream)}

@@ -1,5 +1,8 @@
 import BaseUtils from "deco-sites/hugo-estudos/components/personal-shopper/utils/BaseUtils.ts";
-import { Ref, StateUpdater } from "https://esm.sh/v128/preact@10.15.1/hooks/src/index.js";
+import {
+  Ref,
+  StateUpdater,
+} from "https://esm.sh/v128/preact@10.15.1/hooks/src/index.js";
 
 export default class ClientUtils extends BaseUtils {
   constructor() {
@@ -7,9 +10,12 @@ export default class ClientUtils extends BaseUtils {
   }
 
   sendUsername(userName: string) {
-    this.userName = userName;
-    this._sendData({
-      type: "store_user",
+    return new Promise<void>((resolve) => {
+      this.userName = userName;
+      this._sendData({
+        type: "store_user",
+      });
+      resolve();
     });
   }
 
@@ -47,7 +53,7 @@ export default class ClientUtils extends BaseUtils {
         this.peerConn.addTrack(track, stream);
       });
 
-      this.peerConn.onicecandidate = (e: any) => {
+      this.peerConn.onicecandidate = async (e: any) => {
         if (e.candidate == null) {
           return;
         }
