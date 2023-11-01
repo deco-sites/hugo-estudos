@@ -14,6 +14,7 @@ export default class ClientUtils extends BaseUtils {
       this.userName = userName;
       this._sendData({
         type: "store_user",
+        //TODO: enviar mais dados
       });
       resolve();
     });

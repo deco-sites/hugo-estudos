@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import Button from "deco-sites/hugo-estudos/components/ui/Button.tsx";
 import {
   checkAuth,
@@ -7,6 +7,7 @@ import {
 import { lazy, Suspense } from "preact/compat";
 import Spinner from "deco-sites/hugo-estudos/components/ui/Spinner.tsx";
 import useCategorySeller from "deco-sites/hugo-estudos/components/personal-shopper/hooks/useCategorySeller.tsx";
+import useProduct from "deco-sites/hugo-estudos/components/personal-shopper/hooks/useProduct.tsx";
 
 const VideoModal = lazy(() =>
   import(
@@ -15,15 +16,16 @@ const VideoModal = lazy(() =>
 );
 
 export interface Props {
-  category: string;
+  productId: string;
 }
 
-const PersonalShopperStream = ({ category }: Props) => {
+const PersonalShopperStream = ({ productId }: Props) => {
   const [isAuth, setIsAuth] = useState(false);
   const [modalOpened, setModalOpened] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>();
   const [btnLoading, setBtnLoading] = useState(false);
-  const { hasSeller } = useCategorySeller(category);
+  const prod = useProduct(productId);
+  const { hasSeller } = useCategorySeller(productId);
 
   const handleClick = async () => {
     if (modalOpened) {
@@ -46,6 +48,11 @@ const PersonalShopperStream = ({ category }: Props) => {
     setModalOpened(true);
     setBtnLoading(false);
   };
+
+  useEffect(() => {
+    console.log("PRODID", productId);
+    console.log("PROD", prod);
+  }, [prod]);
 
   return (
     <>

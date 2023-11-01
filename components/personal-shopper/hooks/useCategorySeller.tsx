@@ -1,10 +1,10 @@
 import { useEffect, useState } from "preact/hooks";
 
-export default function useCategorySeller(category: string) {
+export default function useCategorySeller(productId: string) {
   //   const [data, setData] = useState<any | null>(null);
   //   const [loading, setLoading] = useState<boolean>(true);
   //   const [error, setError] = useState<Error | null>(null);
-
+  //    const url = "https://www.stylestore.com.ar/api/catalog_system/pub/products/search/?fq=productId:" + productId
   //   useEffect(() => {
   //     const fetchData = async () => {
   //       try {

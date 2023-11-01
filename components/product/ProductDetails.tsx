@@ -76,7 +76,6 @@ function ProductInfo({ page, layout }: { page: ProductDetailsPage } & Props) {
     gtin,
     isVariantOf,
     additionalProperty = [],
-    category,
   } = product;
   const description = product.description || isVariantOf?.description;
   const {
@@ -88,7 +87,6 @@ function ProductInfo({ page, layout }: { page: ProductDetailsPage } & Props) {
   } = useOffer(offers);
   const productGroupID = isVariantOf?.productGroupID ?? "";
   const discount = price && listPrice ? listPrice - price : 0;
-
   return (
     <>
       {/* Breadcrumb */}
@@ -142,8 +140,7 @@ function ProductInfo({ page, layout }: { page: ProductDetailsPage } & Props) {
             <>
               {platform === "vtex" && (
                 <>
-                  {category &&
-                    <PersonalShopper category={category} />}
+                  <PersonalShopper productId={productID} />
                   <AddToCartButtonVTEX
                     name={name}
                     productID={productID}

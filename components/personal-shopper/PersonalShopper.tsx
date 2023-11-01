@@ -1,11 +1,11 @@
 import PersonalShopperStream from "deco-sites/hugo-estudos/islands/PersonalShopperStream.tsx";
 
 export interface Props {
-  category : string
+  productId : string
 }
 
-const PersonalShopper = ({category}: Props) => {
-  return <PersonalShopperStream category={category} />;
+const PersonalShopper = ({productId}: Props) => {
+  return <PersonalShopperStream productId={productId} />;
 };
 
 export default PersonalShopper;
