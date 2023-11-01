@@ -46,11 +46,16 @@ const VideoModal = ({ userProfile, modalOpened }: Props) => {
     if (!clientUtils) return;
 
     const initializeCall = async () => {
+      if (clientUtils.webSocket.readyState !== 1) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        initializeCall();
+        return;
+      }
       await clientUtils.sendUsername(userProfile.Email);
       clientUtils.startCall(setLocalStream, myVideo, remoteVideo);
     };
     initializeCall();
-  }, [clientUtils]);
+  }, [clientUtils, clientUtils.webSocket.readyState]);
 
   return (
     <div class={`${modalOpened ? "block" : "hidden"} mb-5`}>
