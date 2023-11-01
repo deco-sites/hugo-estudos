@@ -1,4 +1,3 @@
-import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from "https://esm.sh/@supabase/supabase-js@2.7.0";
 import { StateUpdater } from "https://esm.sh/v128/preact@10.15.1/hooks/src/index.js";
 
 export default abstract class BaseUtils {
